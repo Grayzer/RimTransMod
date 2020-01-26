@@ -22,7 +22,7 @@
         Dim res As DialogResult = FolderBrowserDialog1.ShowDialog()
         If res = DialogResult.OK Then
             PathRim = FolderBrowserDialog1.SelectedPath
-            If IO.File.Exists(PathRim + "\RimWorldWin64.exe") Or IO.File.Exists(PathRim + "\RimWorldWin.exe") Then
+            If IO.File.Exists(PathRim + "\RimWorldWin64.exe") Or IO.File.Exists(PathRim + "\RimWorldWin.exe") Or IO.File.Exists(PathRim + "\RimWorld.exe") Then
                 RimEnable = True
                 TextBox1.Text = PathRim
                 ToolStripStatusLabel4.Text = "Готово к работе."
@@ -52,10 +52,11 @@
             ComboBox1.SelectedIndex = 0
             Return (True)
         Else
-            Return (False)
             ComboBox1.Items.Clear()
             ComboBox1.Items.Add("English")
             ComboBox1.SelectedIndex = 0
+            Return (False)
+
         End If
 
     End Function

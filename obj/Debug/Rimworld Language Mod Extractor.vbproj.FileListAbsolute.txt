@@ -9,3 +9,14 @@ F:\GitHub\Projects\RimTransMod\RimTransMod\RimTransMod\obj\Debug\Rimworld Langua
 F:\GitHub\Projects\RimTransMod\RimTransMod\RimTransMod\obj\Debug\RimTransMod.exe
 F:\GitHub\Projects\RimTransMod\RimTransMod\RimTransMod\obj\Debug\RimTransMod.xml
 F:\GitHub\Projects\RimTransMod\RimTransMod\RimTransMod\obj\Debug\RimTransMod.pdb
+F:\GitHub\Projects\RimTransMod\bin\Debug\RimTransMod.exe.config
+F:\GitHub\Projects\RimTransMod\bin\Debug\RimTransMod.exe
+F:\GitHub\Projects\RimTransMod\bin\Debug\RimTransMod.pdb
+F:\GitHub\Projects\RimTransMod\bin\Debug\RimTransMod.xml
+F:\GitHub\Projects\RimTransMod\obj\Debug\Rimworld Language Mod Extractor.vbprojAssemblyReference.cache
+F:\GitHub\Projects\RimTransMod\obj\Debug\RimTransMod.Form1.resources
+F:\GitHub\Projects\RimTransMod\obj\Debug\RimTransMod.Resources.resources
+F:\GitHub\Projects\RimTransMod\obj\Debug\Rimworld Language Mod Extractor.vbproj.GenerateResource.cache
+F:\GitHub\Projects\RimTransMod\obj\Debug\RimTransMod.exe
+F:\GitHub\Projects\RimTransMod\obj\Debug\RimTransMod.xml
+F:\GitHub\Projects\RimTransMod\obj\Debug\RimTransMod.pdb
