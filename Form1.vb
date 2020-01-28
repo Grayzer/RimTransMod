@@ -17,24 +17,47 @@
     Friend RimLocModFullPath As String()
     Friend RimSteamModName As String()
     Friend RimLocModName As String()
-    Friend ModNames(500) As (String, String)
+    Friend ModNames(499) As (String, String)
     Friend DefsList As String()
     Friend SubDefsList As String()
 
 
+    Public Function FillDefNames() As Boolean
+        Dim fname As String
+        Dim idx = ListBox1.SelectedIndex                                                            'специально делаю именно так, с прицелом на будущее
+        Dim idxMod = ListBox2.SelectedItem
+        Dim idxDefs = ListBox3.SelectedItem
+        fname = ModNames(idx).Item2 + "\Defs\" + idxMod + "\" + idxDefs
+        Dim doc As XDocument = XDocument.Load(fname, System.StringComparison.CurrentCultureIgnoreCase)
+
+        Dim xdef = doc.Root.Elements                                                                'получаем полный список ветвей
+        Dim idef = xdef.Count                                                                       'получаем кол-во ветвей
+        ListBox4.Items.Clear()
+        For xroot = 0 To idef - 1                                                                   'делаем цикл для парсинга каждой ветви
+            Dim xsub = xdef(xroot).Elements                                                         'получаем список элементов для парсинга
+            Dim isub = xsub.Count                                                                   'получаем кол-во элементов
+            For iroot = 0 To isub - 1                                                               'делаем цикл для парсинга каждой ноды (смотрим Name для имени ноды и Value для значения этой ноды)
+                ListBox4.Items.Add("<" + xsub(iroot).Name.ToString + ">" + xsub(iroot).Value.ToString + "</" + xsub(iroot).Name.ToString + ">")
+            Next
+        Next
+
+
+        Return (True)
+    End Function
 
     Public Function FillSubDefs() As Boolean
         Dim i As Integer = ListBox2.SelectedIndex
         Dim PathSubDefs As String = ModNames(ListBox1.SelectedIndex).Item2 + "\Defs\" + DefsList(i)
         ListBox3.Items.Clear()
 
-        SubDefsList = IO.Directory.GetFiles(PathSubDefs)
+        SubDefsList = IO.Directory.GetFiles(PathSubDefs, "*.xml")
         Dim tmplist As String() = SubDefsList
         For sel = 0 To tmplist.Count - 1
             tmplist(sel) = tmplist.ElementAt(sel).Substring(PathSubDefs.Length + 1)
         Next
 
         ListBox3.Items.AddRange(tmplist)
+        Return (True)
     End Function
 
 
@@ -51,7 +74,7 @@
             Next
             ListBox2.Items.AddRange(tmplist)
         End If
-
+        Return (True)
     End Function
 
 
@@ -69,18 +92,13 @@
             CountSteamMods = ListMods.Count
             CountWorkMods = WListMods.Count
             ListBox1.Items.Clear()
-            'Dim ModNames(CountSteamMods + CountWorkMods) As (String, String)
             For i = 0 To CountSteamMods - 1
-                'Dim doc As XDocument = XDocument.Load(ListMods(i) + "\About\About.xml")
-                'ModNames(i).Item1 = doc.Root.Element("name").Value.ToString
-                ModNames(i).Item1 = NameMod(WListMods(i))
+                ModNames(i).Item1 = NameMod(ListMods(i))
                 ModNames(i).Item2 = ListMods(i)
                 ListBox1.Items.Add(ModNames(i).Item1)
             Next
 
             For i = 0 To CountWorkMods - 1
-                'Dim doc As XDocument = XDocument.Load(WListMods(i) + "\About\About.xml")
-                'ModNames(i + CountSteamMods).Item1 = doc.Root.Element("name").Value.ToString
                 ModNames(i + CountSteamMods).Item1 = NameMod(WListMods(i))
                 ModNames(i + CountSteamMods).Item2 = WListMods(i)
                 ListBox1.Items.Add(ModNames(i + CountSteamMods).Item1)
@@ -88,7 +106,6 @@
 
         End If
 
-        'ListBox1.Items.Add(ModNames(0).FullPath)
         Return (True)
     End Function
 
@@ -161,42 +178,46 @@
                 SteamRimEnable = False
                 ToolStripStatusLabel2.Text = "Rimword: не найден."
             Else
-                If My.Computer.Registry.GetValue("HKEY_CURRENT_USER\Software\Valve\Steam\Apps\294100", "Installed", Nothing) = 1 Then
-                    SteamRimEnable = True
-                    ToolStripStatusLabel2.Text = "Rimword: установлен."
+            If My.Computer.Registry.GetValue("HKEY_CURRENT_USER\Software\Valve\Steam\Apps\294100", "Installed", Nothing) = 1 Then
+                SteamRimEnable = True
+                ToolStripStatusLabel2.Text = "Rimword: установлен."
 
-                    Dim zzz = My.Computer.FileSystem.ReadAllText(PathSteam + "\config\config.vdf")
+                Dim zzz = My.Computer.FileSystem.ReadAllText(PathSteam + "\config\config.vdf")
 
-                    bbb = InStr(zzz, "BaseInstallFolder_1")
-                    If bbb > 0 Then
-                        aaa = Trim(zzz.Substring(bbb + 22))
-                        bbb = InStr(aaa, """")
-                        aaa = Mid(aaa, 1, bbb - 1)
-                        While InStr(aaa, "\\")
-                            bbb = InStr(aaa, "\\")
-                            aaa = aaa.Remove(bbb, 1)
-                        End While
-                        PathSteamRim = aaa + "\SteamApps\common\RimWorld"
-                        PathSteamRimWorkshop = aaa + "\SteamApps\workshop\content\294100"
+                bbb = InStr(zzz, "BaseInstallFolder_1")
+                If bbb > 0 Then
+                    aaa = Trim(zzz.Substring(bbb + 22))
+                    bbb = InStr(aaa, """")
+                    aaa = Mid(aaa, 1, bbb - 1)
+                    While InStr(aaa, "\\")
+                        bbb = InStr(aaa, "\\")
+                        aaa = aaa.Remove(bbb, 1)
+                    End While
+                    PathSteamRim = aaa + "\SteamApps\common\RimWorld"
+                    PathSteamRimWorkshop = aaa + "\SteamApps\workshop\content\294100"
 
-                        If IO.File.Exists(PathSteamRim + "\Version.txt") Then
-                            Dim vvv As String = My.Computer.FileSystem.ReadAllText(PathSteamRim + "\Version.txt")
-                            vvv = vvv.Trim(vbCr, vbLf)
-                            ToolStripStatusLabel3.Text = "Версия игры: " + vvv
-                        Else
-                            ToolStripStatusLabel3.Text = "Версия игры: неизвестна"
-                        End If
-
-
-                        'TextBox1.Text = PathSteamRim
-
+                    If IO.File.Exists(PathSteamRim + "\Version.txt") Then
+                        Dim vvv As String = My.Computer.FileSystem.ReadAllText(PathSteamRim + "\Version.txt")
+                        vvv = vvv.Trim(vbCr, vbLf)
+                        ToolStripStatusLabel3.Text = "Версия игры: " + vvv
+                    Else
+                        ToolStripStatusLabel3.Text = "Версия игры: неизвестна"
                     End If
+
+
+
                 End If
+
+
             End If
 
-            RimLang()
 
-        End Sub
+        End If
+
+        RimLang()
+
+
+    End Sub
 
 
 
@@ -235,7 +256,6 @@
 
         If SteamRimEnable And CheckedListBox2.GetItemCheckState(0) = CheckState.Checked Then
             ListBox1.Items.Clear()
-            'ListBox1.Items.AddRange(RimSteamMod)
             FillNameMod()
         Else
             ListBox1.Items.Clear()
@@ -259,5 +279,9 @@
 
     Private Sub ListBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox2.SelectedIndexChanged
         FillSubDefs()
+    End Sub
+
+    Private Sub ListBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox3.SelectedIndexChanged
+        FillDefNames()
     End Sub
 End Class

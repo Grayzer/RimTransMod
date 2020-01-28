@@ -170,7 +170,7 @@ Partial Class Form1
         'ListBox5
         '
         Me.ListBox5.FormattingEnabled = True
-        Me.ListBox5.Items.AddRange(New Object() {"label", "description", "jobString", "verb", "gerund", "ResearchLabel", "ResearchDesc", "ResearchDescDisc", "stats"})
+        Me.ListBox5.Items.AddRange(New Object() {"label", "description", "jobString", "reportString", "verb", "gerund", "ResearchLabel", "ResearchDesc", "ResearchDescDisc", "stats"})
         Me.ListBox5.Location = New System.Drawing.Point(520, 180)
         Me.ListBox5.Name = "ListBox5"
         Me.ListBox5.ScrollAlwaysVisible = True
