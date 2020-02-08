@@ -24,22 +24,62 @@
 
     Public Function FillDefNames() As Boolean
         Dim fname As String
+        Dim fnode As String = ""
+        Dim inode As String = ""
+        Dim xnode As String = ""
+        Dim froot As String = ""
+        Dim idxNodes = ListBox5.Items.Count
         Dim idx = ListBox1.SelectedIndex                                                            'специально делаю именно так, с прицелом на будущее
         Dim idxMod = ListBox2.SelectedItem
         Dim idxDefs = ListBox3.SelectedItem
         fname = ModNames(idx).Item2 + "\Defs\" + idxMod + "\" + idxDefs
         Dim doc As XDocument = XDocument.Load(fname, System.StringComparison.CurrentCultureIgnoreCase)
-
+        Dim tnode As String = ""
         Dim xdef = doc.Root.Elements                                                                'получаем полный список ветвей
         Dim idef = xdef.Count                                                                       'получаем кол-во ветвей
+        Dim xattr As Boolean = False
         ListBox4.Items.Clear()
+        'в связи с тем, есть ветки с абстрактом - делаем упрощенный парсинг. возможно потом по абстракциям в конце пройду
         For xroot = 0 To idef - 1                                                                   'делаем цикл для парсинга каждой ветви
             Dim xsub = xdef(xroot).Elements                                                         'получаем список элементов для парсинга
             Dim isub = xsub.Count                                                                   'получаем кол-во элементов
-            For iroot = 0 To isub - 1                                                               'делаем цикл для парсинга каждой ноды (смотрим Name для имени ноды и Value для значения этой ноды)
-                ListBox4.Items.Add("<" + xsub(iroot).Name.ToString + ">" + xsub(iroot).Value.ToString + "</" + xsub(iroot).Name.ToString + ">")
-            Next
+            fnode = ""
+            inode = ""
+            xnode = ""
+            froot = ""
+            xattr = False
+
+            If xdef(xroot).HasAttributes = False Then                   'парсим ветки без абстракций. сначала ищем defname
+                froot = ""
+                For def = 0 To isub - 1
+                    If xsub(def).Name.ToString.ToLower = "defname" Then
+                        froot = xsub(def).Value.ToString
+                    End If
+                Next
+                fnode = ""
+                inode = ""
+                xnode = ""
+                If froot <> "" Then                                     'если в ветке находили defname то начинаем парсить ветку для перевода
+                    For ndef = 0 To isub - 1                            'парсим ветки без абстракций
+                        For tdef = 0 To ListBox5.Items.Count - 1
+                            If xsub(ndef).Name.ToString.ToLower = ListBox5.Items.Item(tdef).ToString.ToLower Then   'если нашли ключ из списка - то клеим строку
+                                fnode = xsub(ndef).Name.ToString
+                                inode = xsub(ndef).Value.ToString
+                                xnode = "<" & froot & "." & fnode & ">" & inode & "</" & froot & "." & fnode & ">"
+                                ListBox4.Items.Add(xnode)
+                            End If
+
+                        Next
+                    Next
+                End If
+            End If
+
+
+            If froot <> "" Then ListBox4.Items.Add("")
+
+
         Next
+        Dim zz1 = xdef(0)
 
 
         Return (True)

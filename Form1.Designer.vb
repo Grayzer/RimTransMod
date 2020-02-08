@@ -164,18 +164,19 @@ Partial Class Form1
         Me.ListBox4.Location = New System.Drawing.Point(281, 180)
         Me.ListBox4.Name = "ListBox4"
         Me.ListBox4.ScrollAlwaysVisible = True
-        Me.ListBox4.Size = New System.Drawing.Size(233, 173)
+        Me.ListBox4.Size = New System.Drawing.Size(471, 173)
         Me.ListBox4.TabIndex = 11
         '
         'ListBox5
         '
         Me.ListBox5.FormattingEnabled = True
-        Me.ListBox5.Items.AddRange(New Object() {"label", "description", "jobString", "reportString", "verb", "gerund", "ResearchLabel", "ResearchDesc", "ResearchDescDisc", "stats"})
+        Me.ListBox5.Items.AddRange(New Object() {"label", "description", "jobString", "reportString", "verb", "gerund", "ResearchLabel", "ResearchDesc", "ResearchDescDisc", "headerTip", "stats"})
         Me.ListBox5.Location = New System.Drawing.Point(520, 180)
         Me.ListBox5.Name = "ListBox5"
         Me.ListBox5.ScrollAlwaysVisible = True
         Me.ListBox5.Size = New System.Drawing.Size(268, 173)
         Me.ListBox5.TabIndex = 11
+        Me.ListBox5.Visible = False
         '
         'RichTextBox1
         '
