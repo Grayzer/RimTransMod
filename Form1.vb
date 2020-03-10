@@ -87,7 +87,7 @@
 
     Public Function FillSubDefs() As Boolean
         Dim i As Integer = ListBox2.SelectedIndex
-        Dim PathSubDefs As String = ModNames(ListBox1.SelectedIndex).Item2 + "\Defs\" + DefsList(i)
+        Dim PathSubDefs As String = ModNames(ListBox1.SelectedIndex).Item2 + "\Defs\" + DefsList(i - 1)
         ListBox3.Items.Clear()
 
         SubDefsList = IO.Directory.GetFiles(PathSubDefs, "*.xml")
@@ -169,34 +169,38 @@
 
         Public Function RimLang() As Boolean
 
-            If SteamRimEnable Then PathLang = PathSteamRim + "\Mods\Core\Languages\"
-            If RimEnable Then PathLang = PathRim + "\Mods\Core\Languages\"
-            Dim lll As Integer = PathLang.Length
-            Dim ddd = IO.Directory.GetDirectories(PathLang)
-            Dim xxx = ddd.Count
-            For i = 0 To xxx - 1
-                ddd(i) = ddd.ElementAt(i).Substring(lll)
-            Next
-            If SteamRimEnable Or RimEnable Then
-                ComboBox1.Items.Clear()
-                ComboBox1.Items.AddRange(ddd)
-                ComboBox1.SelectedIndex = 0
-                Return (True)
-            Else
-                ComboBox1.Items.Clear()
-                ComboBox1.Items.Add("English")
-                ComboBox1.SelectedIndex = 0
-                Return (False)
+        If SteamRimEnable Then PathLang = PathSteamRim + "\Data\Core\Languages\"
+        If RimEnable Then PathLang = PathRim + "\Data\Core\Languages\"
+        Dim lll As Integer = PathLang.Length
+        Dim ddd = IO.Directory.GetFiles(PathLang)
+        Dim xxx = ddd.Count
+        ddd(0) = "English"
+        'For i = 0 To xxx - 1
+        '    ddd(i + 1) = ddd.ElementAt(i).Substring(lll)
+        'Next
+        If SteamRimEnable Or RimEnable Then
+            ComboBox1.Items.Clear()
+            ComboBox1.Items.Add("English")
+            ComboBox1.Items.AddRange(ddd)
+            ComboBox1.SelectedIndex = 0
+            Return (True)
+        Else
+            ComboBox1.Items.Clear()
+            ComboBox1.Items.Add("English")
+            ComboBox1.SelectedIndex = 0
+            Return (False)
+        End If
 
-            End If
-
-        End Function
+    End Function
 
         Public Function NameMod(FullPathMod As String) As String
-            Dim ModName As String = ""
-            Dim doc As XDocument = XDocument.Load(FullPathMod + "\About\About.xml")
-
-        ModName = doc.Root.Element("name").Value.ToString
+        Dim ModName As String = "unknow"
+        If IO.Directory.Exists(FullPathMod + "\About") Then
+            If IO.File.Exists(FullPathMod + "\About\About.xml") Then
+                Dim doc As XDocument = XDocument.Load(FullPathMod + "\About\About.xml")
+                ModName = doc.Root.Element("name").Value.ToString
+            End If
+        End If
 
         Return (ModName)
         End Function
